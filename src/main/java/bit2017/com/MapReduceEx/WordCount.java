@@ -18,78 +18,69 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class WordCount {
 
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
-
 		private Text word = new Text();
-		private static LongWritable one = new LongWritable(1); //내용이 변하지 않으므로
+		private static LongWritable one = new LongWritable(1);
 		
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			
 			String line = value.toString();
-			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,|()<> '");
+			StringTokenizer tokenizer = 
+					 new StringTokenizer( line, "\r\n\t,|()<> ''.:" );
 			while( tokenizer.hasMoreTokens() ) {
-				
-				String word_ori = tokenizer.nextToken();
-				word.set(word_ori);
-				context.write(word, one);
+				word.set( tokenizer.nextToken().toLowerCase() );
+				context.write( word, one );
 			}
 		}
 	}
 
 	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
-		private LongWritable sumWritable = new LongWritable(); 
+		private LongWritable sumWritable = new LongWritable();
 		
 		@Override
-		protected void reduce(Text key, Iterable<LongWritable> values, Reducer<Text, LongWritable, Text, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
+		protected void reduce(Text key, Iterable<LongWritable> values,
+				Reducer<Text, LongWritable, Text, LongWritable>.Context context) throws IOException, InterruptedException {
 			long sum = 0;
-			for(LongWritable value : values) {
+			for( LongWritable value : values ) {
 				sum += value.get();
 			}
 			
-			sumWritable.set(sum);
-			context.write(key, sumWritable);
-			
+			sumWritable.set( sum );
+			context.write( key, sumWritable );
 		}
-		
 	}
 	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "WordCount" );
 		
-		// 1. Job Instance를 가지고 초기화 작업
+		//1. Job Instance 초기화 작업
 		job.setJarByClass( WordCount.class );
 		
-		// 2. 맵 클래스 지정
+		//2. 맵퍼 클래스 지정
 		job.setMapperClass( MyMapper.class );
-
-		// 3. 리듀스 클래스 지정
+		//3. 리듀서 클래스 지정
 		job.setReducerClass( MyReducer.class);
 		
-		// 4. 출력 키 타입
-		job.setMapOutputKeyClass( Text.class );
+		//4. 출력 키 타입
+		job.setOutputKeyClass( Text.class );
+		//5. 출력 밸류 타입
+		job.setMapOutputValueClass( LongWritable.class );
 		
-		// 5. 출력 밸류 타입
-		job.setMapOutputKeyClass( LongWritable.class );
-		
-		// 6. 입력 파일 포멧 지정 ( 생략 가능 )
+		//6. 입력 파일 포맷 지정(생략 가능)
 		job.setInputFormatClass( TextInputFormat.class );
-		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
+		//7. 출력 파일 포맷 지정(생략 가능)
 		job.setOutputFormatClass( TextOutputFormat.class );
 		
-		// 8. 입력 파일 위치 지정
+		//8.입력 파일 이름 지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		
-		// 9. 출력 파일 위치 지정
+		//9. 출력 디렉토리 지정
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
-		// 10. 실행
-		job.waitForCompletion(true);
-
-		
+		//10. 실행
+		job.waitForCompletion( true );
 	}
 }
