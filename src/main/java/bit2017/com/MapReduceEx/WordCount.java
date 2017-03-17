@@ -27,7 +27,7 @@ public class WordCount {
 				throws IOException, InterruptedException {
 			
 			String line = value.toString();
-			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,|()<> ''");
+			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,./|()<>{} '\"");
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
