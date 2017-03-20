@@ -1,4 +1,4 @@
-package bit2017.com.MapReduceEx;
+package com.bit2017.MapReduceEx;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -17,17 +17,19 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.bit2017.mapreduce.io.NumberWritable;
+
 public class WordCount {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+	public static class MyMapper extends Mapper<LongWritable, Text, Text, NumberWritable> {
 
 		private Text word = new Text();
-		private static LongWritable one = new LongWritable(1); //내용이 변하지 않으므로
+		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
 		
 		@Override
 		protected void setup(
-				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				Mapper<LongWritable, Text, Text, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Mapper setup() called");
@@ -35,7 +37,7 @@ public class WordCount {
 		}
 		
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
 			String line = value.toString();
@@ -50,7 +52,7 @@ public class WordCount {
 
 		@Override
 		protected void cleanup(
-				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				Mapper<LongWritable, Text, Text, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Mapper cleanup() called");
@@ -58,13 +60,13 @@ public class WordCount {
 		}
 	}
 
-	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
+	public static class MyReducer extends Reducer<Text, NumberWritable, Text, LongWritable> {
 
 		private LongWritable sumWritable = new LongWritable(); 
 
 		@Override
 		protected void setup(
-				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+				Reducer<Text, NumberWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Reducer setup() called");
@@ -72,11 +74,11 @@ public class WordCount {
 		}
 		
 		@Override
-		protected void reduce(Text key, Iterable<LongWritable> values, Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+		protected void reduce(Text key, Iterable<NumberWritable> values, Reducer<Text, NumberWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			long sum = 0;
-			for(LongWritable value : values) {
+			for(NumberWritable value : values) {
 				sum += value.get();
 			}
 			
@@ -85,8 +87,7 @@ public class WordCount {
 		}
 		
 		
-// 		run은 보통 Over ride 하지 않는다.
-		
+// 		run은 보통 Over ride 하지 않는다.		
 //		@Override
 //		public void run(
 //				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
@@ -98,7 +99,7 @@ public class WordCount {
 		
 		@Override
 		protected void cleanup(
-				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+				Reducer<Text, NumberWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Reducer cleanup() called");
@@ -122,7 +123,7 @@ public class WordCount {
 		job.setReducerClass( MyReducer.class);
 		
 		// 4. 출력 키 타입
-		job.setOutputKeyClass( Text.class );
+		job.setMapOutputKeyClass( Text.class );
 		
 		// 5. 출력 밸류 타입
 		job.setMapOutputValueClass( LongWritable.class );
