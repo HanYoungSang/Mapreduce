@@ -11,6 +11,7 @@ public class NumberWritable implements Writable {
 
 	private Long number;
 
+	public NumberWritable(){}
 	public NumberWritable(Long number) {
 		this.number = number;
 	}
@@ -20,6 +21,11 @@ public class NumberWritable implements Writable {
 		return number;
 	}
 
+	// WordCount 클래스에서 get으로 숫자를 가져오므로
+	public void set(Long number){
+		this.number = number;
+	}
+	
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		number = WritableUtils.readVLong(in);

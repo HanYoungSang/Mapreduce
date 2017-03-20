@@ -60,13 +60,13 @@ public class WordCount {
 		}
 	}
 
-	public static class MyReducer extends Reducer<Text, NumberWritable, Text, LongWritable> {
+	public static class MyReducer extends Reducer<Text, NumberWritable, Text, NumberWritable> {
 
-		private LongWritable sumWritable = new LongWritable(); 
+		private NumberWritable sumWritable = new NumberWritable(); 
 
 		@Override
 		protected void setup(
-				Reducer<Text, NumberWritable, Text, LongWritable>.Context context)
+				Reducer<Text, NumberWritable, Text, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Reducer setup() called");
@@ -74,7 +74,7 @@ public class WordCount {
 		}
 		
 		@Override
-		protected void reduce(Text key, Iterable<NumberWritable> values, Reducer<Text, NumberWritable, Text, LongWritable>.Context context)
+		protected void reduce(Text key, Iterable<NumberWritable> values, Reducer<Text, NumberWritable, Text, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			long sum = 0;
@@ -99,7 +99,7 @@ public class WordCount {
 		
 		@Override
 		protected void cleanup(
-				Reducer<Text, NumberWritable, Text, LongWritable>.Context context)
+				Reducer<Text, NumberWritable, Text, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Reducer cleanup() called");
