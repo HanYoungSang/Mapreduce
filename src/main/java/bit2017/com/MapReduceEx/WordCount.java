@@ -3,6 +3,8 @@ package bit2017.com.MapReduceEx;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -17,10 +19,20 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount {
 
+	private static Log log = LogFactory.getLog(WordCount.class);
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
 		private Text word = new Text();
 		private static LongWritable one = new LongWritable(1); //내용이 변하지 않으므로
+		
+		@Override
+		protected void setup(
+				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			// TODO Auto-generated method stub
+			log.info("--------------->>>> Mapper setup() called");
+			super.setup(context);
+		}
 		
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
@@ -35,11 +47,29 @@ public class WordCount {
 				context.write(word, one);
 			}
 		}
+
+		@Override
+		protected void cleanup(
+				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			// TODO Auto-generated method stub
+			log.info("--------------->>>> Mapper cleanup() called");
+			super.cleanup(context);
+		}
 	}
 
 	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
 
 		private LongWritable sumWritable = new LongWritable(); 
+
+		@Override
+		protected void setup(
+				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			// TODO Auto-generated method stub
+			log.info("--------------->>>> Reducer setup() called");
+			super.setup(context);
+		}
 		
 		@Override
 		protected void reduce(Text key, Iterable<LongWritable> values, Reducer<Text, LongWritable, Text, LongWritable>.Context context)
@@ -52,8 +82,29 @@ public class WordCount {
 			
 			sumWritable.set(sum);
 			context.write(key, sumWritable);
-			
 		}
+		
+		
+// 		run은 보통 Over ride 하지 않는다.
+		
+//		@Override
+//		public void run(
+//				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+//				throws IOException, InterruptedException {
+//			// TODO Auto-generated method stub
+//			log.info("--------------->>>> Reducer run() called");
+//			super.run(context);
+//		}
+		
+		@Override
+		protected void cleanup(
+				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			// TODO Auto-generated method stub
+			log.info("--------------->>>> Reducer cleanup() called");
+			super.cleanup(context);
+		}
+
 		
 	}
 	
