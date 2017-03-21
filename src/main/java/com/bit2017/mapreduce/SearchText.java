@@ -24,16 +24,21 @@ public class SearchText {
 	private static Log log = LogFactory.getLog(WordCount.class);
 	public static String searchText = "";
 	
-	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
 		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
-		private static CharSequence charSearchText = searchText;
-		
+//		private static CharSequence charSearchText = searchText;
+	
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
+			log.info("============= map()" + searchText);
+			CharSequence charSearchText = searchText;
+			log.info("============= map()" + searchText + "," + charSearchText.toString());
+			searchText = "Hi";
+			charSearchText = searchText;
+			log.info("============= map()" + searchText + "," + charSearchText.toString());
 			
 			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
 			
@@ -42,7 +47,7 @@ public class SearchText {
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
-//				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
+				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
 				log.info("============= map() word_ori is " + word_ori);
 				
 				
