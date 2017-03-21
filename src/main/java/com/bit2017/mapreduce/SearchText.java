@@ -29,18 +29,18 @@ public class SearchText {
 		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
 		private static CharSequence charSearchText;
-	
+
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
-			log.info("============= map()" + SearchText.searchText);
-			CharSequence charSearchText = SearchText.searchText;
-			log.info("============= map()" + searchText + "," + charSearchText.toString());
+//			log.info("============= map()" + SearchText.searchText);
+//			CharSequence charSearchText = SearchText.searchText;
+//			log.info("============= map()" + searchText + "," + charSearchText.toString());
 //			searchText = "Hi";
 //			charSearchText = searchText;
 //			log.info("============= map()" + searchText + "," + charSearchText.toString());
 //			
-//			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
+			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
@@ -66,9 +66,11 @@ public class SearchText {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "WordCount" );
 		
-		searchText = new String(args[2]);
-		System.err.println(args[2]);
-		log.info("============= search text is " + searchText);
+		MyMapper.charSearchText = args[2];
+		
+//		searchText = new String(args[2]);
+//		System.err.println(args[2]);
+//		log.info("============= search text is " + searchText);
 		
 		
 		// 1. Job Instance를 가지고 초기화 작업
