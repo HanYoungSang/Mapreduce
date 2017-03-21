@@ -23,6 +23,8 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class WordCount {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
+	private static String searchText = "";
+	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
 		private StringWritable word = new StringWritable();
@@ -46,8 +48,12 @@ public class WordCount {
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
-				word.set(word_ori);
-				context.write(word, one);
+				
+				if ( word_ori.contains(searchText ) ) {
+					word.set(word_ori);
+					context.write(word, one);	
+				}
+				
 			}
 		}
 
@@ -126,6 +132,8 @@ public class WordCount {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "WordCount" );
+		
+		searchText = args[2];
 		
 		// 1. Job Instance를 가지고 초기화 작업
 		job.setJarByClass( WordCount.class );
