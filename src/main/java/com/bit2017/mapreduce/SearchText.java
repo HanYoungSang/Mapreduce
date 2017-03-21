@@ -22,20 +22,24 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class SearchText {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	private static String searchText = "";
+//	private static String searchText = "";
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
 		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
-		private static CharSequence charSearchText = searchText;
+//		private static CharSequence charSearchText = searchText;
 
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
-			log.info("============= map() charSearchText text is " + charSearchText.toString());
+//			log.info("============= map() charSearchText text is " + charSearchText.toString());
 			
+			Configuration conf = context.getConfiguration();
+			CharSequence charSearchText = conf.get("search");
+			log.info("============= map() charSearchText text is " + charSearchText);
+					 
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
 			while( tokenizer.hasMoreTokens() ) {
@@ -58,8 +62,12 @@ public class SearchText {
 	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job( conf, "WordCount" );
+		conf.setStrings("search", args[2]);
+		Job job = new Job(conf);
+//				( conf, "WordCount" );
 
+//		log.info("======= main search text is " + args[2]);
+//		MyMapper.charSearchText = args[2];
 		
 //		searchText = new String(args[2]);
 //		System.err.println(args[2]);
@@ -95,8 +103,6 @@ public class SearchText {
 		// 9. 출력 파일 위치 지정
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-		log.info("======= main search text is " + args[2]);
-		MyMapper.charSearchText = args[2];
 		// 10. 실행
 		job.waitForCompletion(true);
 
