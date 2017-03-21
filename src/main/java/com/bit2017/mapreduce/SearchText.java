@@ -19,7 +19,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.io.NumberWritable;
 
-public class WordSearch {
+public class SearchText {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
 	public static String searchText = "";
@@ -29,21 +29,13 @@ public class WordSearch {
 
 		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
-		
-		@Override
-		protected void setup(
-				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			log.info("--------------->>>> Mapper setup() called");
-			super.setup(context);
-		}
+		private static CharSequence charSearchText = searchText;
 		
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
-			log.info("============= map() search text is " + searchText);
+			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
@@ -53,7 +45,7 @@ public class WordSearch {
 //				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
 				log.info("============= map() word_ori is " + word_ori);
 				
-				CharSequence charSearchText = searchText;
+				
 				if ( word_ori.contains(charSearchText ) ) {
 					
 					word.set(word_ori);
@@ -63,75 +55,6 @@ public class WordSearch {
 			}
 		}
 
-		@Override
-		protected void cleanup(
-				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			log.info("--------------->>>> Mapper cleanup() called");
-			super.cleanup(context);
-		}
-	}
-
-	public static class MyReducer extends Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable> {
-
-		private NumberWritable sumWritable = new NumberWritable(); 
-
-		@Override
-		protected void setup(
-				Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			log.info("--------------->>>> Reducer setup() called");
-			super.setup(context);
-		}
-		
-		@Override
-		protected void reduce(StringWritable key, Iterable<NumberWritable> values, Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			long sum = 0;
-
-			for(NumberWritable value : values) {
-				sum += value.get();
-			}
-			
-//			for (Iterator<NumberWritable> iterator = values.iterator(); iterator.hasNext();) {
-//				distinctSum+= iterator.next()..get();
-//	         }
-			
-			
-			sumWritable.set(sum);
-			
-			context.getCounter("Word Status", "Count of all Words").increment( sum );
-			
-			context.getCounter("Word Status", "Count of distinct Words").increment( 1L );
-			
-			context.write(key, sumWritable);
-		}
-		
-		
-// 		run은 보통 Override 하지 않는다.		
-//		@Override
-//		public void run(
-//				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
-//				throws IOException, InterruptedException {
-//			// TODO Auto-generated method stub
-//			log.info("--------------->>>> Reducer run() called");
-//			super.run(context);
-//		}
-		
-		@Override
-		protected void cleanup(
-				Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
-				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			log.info("--------------->>>> Reducer cleanup() called");
-			super.cleanup(context);
-		}
-
-
-		
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -143,7 +66,7 @@ public class WordSearch {
 		
 		
 		// 1. Job Instance를 가지고 초기화 작업
-		job.setJarByClass( WordCount.class );
+		job.setJarByClass( SearchText.class );
 		
 		// 2. 맵 클래스 지정
 		job.setMapperClass( MyMapper.class );
