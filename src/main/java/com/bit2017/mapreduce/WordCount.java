@@ -81,9 +81,9 @@ public class WordCount {
 			long sum = 0;
 			long distinctSum = 0;
 			
-			for(NumberWritable value : values) {
-				sum += value.get();
-			}
+//			for(NumberWritable value : values) {
+//				sum += value.get();
+//			}
 			
 			for (Iterator<NumberWritable> iterator = values.iterator(); iterator.hasNext();) {
 				distinctSum+= iterator.next().get();
@@ -137,7 +137,7 @@ public class WordCount {
 		job.setReducerClass( MyReducer.class);
 		
 		// 리듀스 태스크 수 
-		job.setNumReduceTasks(1);
+		job.setNumReduceTasks(2);
 
 		
 		// 4. 출력 키 타입
