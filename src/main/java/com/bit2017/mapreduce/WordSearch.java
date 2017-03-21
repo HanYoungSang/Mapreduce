@@ -43,17 +43,17 @@ public class WordSearch {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
-			log.info("============= map() search text is " + searchText);
+//			log.info("============= map() search text is " + searchText);
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,./|()<>{} '\"");
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
-				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
+//				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
 				log.info("============= map() word_ori is " + word_ori);
 				
-				if ( word_ori.contains(searchText ) ) {
+				if ( word_ori.contains("Hadoop" ) ) {
 					
 					word.set(word_ori);
 					context.write(word, one);	
@@ -90,8 +90,7 @@ public class WordSearch {
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			long sum = 0;
-			long distinctSum = 0;
-			
+
 			for(NumberWritable value : values) {
 				sum += value.get();
 			}
