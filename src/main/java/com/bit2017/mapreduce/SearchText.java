@@ -64,15 +64,6 @@ public class SearchText {
 		Configuration conf = new Configuration();
 		conf.setStrings("search", args[2]);
 		Job job = new Job(conf);
-//				( conf, "WordCount" );
-
-//		log.info("======= main search text is " + args[2]);
-//		MyMapper.charSearchText = args[2];
-		
-//		searchText = new String(args[2]);
-//		System.err.println(args[2]);
-//		log.info("============= search text is " + searchText);
-		
 		
 		// 1. Job Instance를 가지고 초기화 작업
 		job.setJarByClass( SearchText.class );

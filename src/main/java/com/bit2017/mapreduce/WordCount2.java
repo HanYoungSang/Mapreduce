@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -14,6 +15,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.io.NumberWritable;
@@ -136,13 +138,17 @@ public class WordCount2 {
 		job.setInputFormatClass( KeyValueTextInputFormat.class );
 		
 		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
-		job.setOutputFormatClass( TextOutputFormat.class );
+		job.setOutputFormatClass( SequenceFileOutputFormat.class );
 		
 		// 8. 입력 파일 위치 지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		
 		// 9. 출력 파일 위치 지정
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+//		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+//		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.RECORD);
+		
 		
 		// 10. 실행
 		job.waitForCompletion(true);
