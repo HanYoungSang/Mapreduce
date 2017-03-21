@@ -34,7 +34,7 @@ public class SearchText {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
-			log.info("============= map() search text is " + charSearchText.toString());
+			log.info("============= map() charSearchText text is " + charSearchText.toString());
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
@@ -71,10 +71,6 @@ public class SearchText {
 		
 		// 2. 맵 클래스 지정
 		job.setMapperClass( MyMapper.class );
-
-		log.info("============= search text is " + args[2]);
-		MyMapper.charSearchText = args[2];
-
 		
 		// 3. 리듀스 클래스 지정
 		job.setReducerClass( Reducer.class);
@@ -98,7 +94,9 @@ public class SearchText {
 		
 		// 9. 출력 파일 위치 지정
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-		
+
+		log.info("======= main search text is " + args[2]);
+		MyMapper.charSearchText = args[2];
 		// 10. 실행
 		job.waitForCompletion(true);
 
