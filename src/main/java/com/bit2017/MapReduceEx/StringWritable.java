@@ -35,4 +35,9 @@ public class StringWritable implements WritableComparable<StringWritable> {
 		
 		return value.compareTo(o.get());
 	}
+	
+	@Override
+	public String toString() {
+		return value;
+	}
 }
