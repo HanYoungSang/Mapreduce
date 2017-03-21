@@ -22,24 +22,18 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class SearchText {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-//	public static String searchText = "Hadoop";
+	private static String searchText = "";
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
 		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
-		private static CharSequence charSearchText;
+		private static CharSequence charSearchText = searchText;
 
 		@Override
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
-//			log.info("============= map()" + SearchText.searchText);
-//			CharSequence charSearchText = SearchText.searchText;
-//			log.info("============= map()" + searchText + "," + charSearchText.toString());
-//			searchText = "Hi";
-//			charSearchText = searchText;
-//			log.info("============= map()" + searchText + "," + charSearchText.toString());
-//			
+			
 			log.info("============= map() search text is " + charSearchText.toString());
 			
 			String line = value.toString();
@@ -65,8 +59,7 @@ public class SearchText {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "WordCount" );
-		
-		MyMapper.charSearchText = args[2];
+
 		
 //		searchText = new String(args[2]);
 //		System.err.println(args[2]);
@@ -79,12 +72,15 @@ public class SearchText {
 		// 2. 맵 클래스 지정
 		job.setMapperClass( MyMapper.class );
 
+		log.info("============= search text is " + args[2]);
+		MyMapper.charSearchText = args[2];
+
+		
 		// 3. 리듀스 클래스 지정
 		job.setReducerClass( Reducer.class);
 		
 		// 리듀스 태스크 수 
 		job.setNumReduceTasks(2);
-
 		
 		// 4. 출력 키 타입
 		job.setMapOutputKeyClass( StringWritable.class );
