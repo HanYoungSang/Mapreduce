@@ -22,7 +22,7 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class SearchText {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	public static String searchText = "Hadoop";
+//	public static String searchText = "Hadoop";
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
@@ -40,14 +40,14 @@ public class SearchText {
 //			charSearchText = searchText;
 //			log.info("============= map()" + searchText + "," + charSearchText.toString());
 //			
-			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
+			log.info("============= map() search text is " + charSearchText.toString());
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
-				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
+//				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
 				log.info("============= map() word_ori is " + word_ori);
 				
 				
