@@ -22,14 +22,14 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class WordCount {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	public static class MyMapper extends Mapper<LongWritable, Text, Text, NumberWritable> {
+	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
-		private Text word = new Text();
+		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
 		
 		@Override
 		protected void setup(
-				Mapper<LongWritable, Text, Text, NumberWritable>.Context context)
+				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Mapper setup() called");
@@ -37,7 +37,7 @@ public class WordCount {
 		}
 		
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, NumberWritable>.Context context)
+		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
 			String line = value.toString();
@@ -52,7 +52,7 @@ public class WordCount {
 
 		@Override
 		protected void cleanup(
-				Mapper<LongWritable, Text, Text, NumberWritable>.Context context)
+				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Mapper cleanup() called");
@@ -123,7 +123,7 @@ public class WordCount {
 		job.setReducerClass( MyReducer.class);
 		
 		// 4. 출력 키 타입
-		job.setMapOutputKeyClass( Text.class );
+		job.setMapOutputKeyClass( StringWritable.class );
 		
 		// 5. 출력 밸류 타입
 		job.setMapOutputValueClass( NumberWritable.class );
