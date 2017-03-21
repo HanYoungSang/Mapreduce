@@ -22,7 +22,7 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class SearchText {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	public static String searchText = "";
+	public static String searchText = "Hadoop";
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
@@ -34,13 +34,13 @@ public class SearchText {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			log.info("============= map()" + SearchText.searchText);
-			CharSequence charSearchText = searchText;
+			CharSequence charSearchText = SearchText.searchText;
 			log.info("============= map()" + searchText + "," + charSearchText.toString());
-			searchText = "Hi";
-			charSearchText = searchText;
-			log.info("============= map()" + searchText + "," + charSearchText.toString());
-			
-			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
+//			searchText = "Hi";
+//			charSearchText = searchText;
+//			log.info("============= map()" + searchText + "," + charSearchText.toString());
+//			
+//			log.info("============= map() search text is " + searchText + "," + charSearchText.toString());
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
@@ -67,6 +67,7 @@ public class SearchText {
 		Job job = new Job( conf, "WordCount" );
 		
 		searchText = new String(args[2]);
+		System.err.println(args[2]);
 		log.info("============= search text is " + searchText);
 		
 		
