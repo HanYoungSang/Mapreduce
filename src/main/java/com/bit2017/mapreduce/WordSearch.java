@@ -43,7 +43,7 @@ public class WordSearch {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
-//			log.info("============= map() search text is " + searchText);
+			log.info("============= map() search text is " + searchText);
 			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\n");
@@ -53,7 +53,8 @@ public class WordSearch {
 //				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
 				log.info("============= map() word_ori is " + word_ori);
 				
-				if ( word_ori.contains(searchText ) ) {
+				CharSequence charSearchText = searchText;
+				if ( word_ori.contains(charSearchText ) ) {
 					
 					word.set(word_ori);
 					context.write(word, one);	
