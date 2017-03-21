@@ -1,6 +1,7 @@
 package com.bit2017.mapreduce;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
@@ -78,12 +79,23 @@ public class WordCount {
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			long sum = 0;
+			long distinctSum = 0;
+			
 			for(NumberWritable value : values) {
 				sum += value.get();
 			}
 			
+			for (Iterator<NumberWritable> iterator = values.iterator(); iterator.hasNext();) {
+				distinctSum+= iterator.next().get();
+	         }
+			
+			
 			sumWritable.set(sum);
+			
 			context.getCounter("Word Status", "Count of all Words").increment( sum );
+			
+			context.getCounter("Word Status", "Count of distinct Words").increment( distinctSum );
+			
 			context.write(key, sumWritable);
 		}
 		
@@ -123,6 +135,10 @@ public class WordCount {
 
 		// 3. 리듀스 클래스 지정
 		job.setReducerClass( MyReducer.class);
+		
+		// 리듀스 태스크 수 
+		job.setNumReduceTasks(1);
+
 		
 		// 4. 출력 키 타입
 		job.setMapOutputKeyClass( StringWritable.class );
