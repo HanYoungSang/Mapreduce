@@ -36,5 +36,9 @@ public class NumberWritable implements Writable {
 	public void write(DataOutput out) throws IOException {
 		WritableUtils.writeVLong(out, number);
 	}
+	@Override
+	public String toString() {
+		return String.valueOf(number);
+	}
 
 }
