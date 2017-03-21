@@ -1,7 +1,6 @@
 package com.bit2017.mapreduce;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
@@ -20,10 +19,12 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.io.NumberWritable;
 
-public class WordCount {
+public class WordSearch {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-
+	private static String searchText;
+	
+	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
 		private StringWritable word = new StringWritable();
@@ -42,15 +43,22 @@ public class WordCount {
 		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
+			log.info("============= map() search text is " + searchText);
+			
 			String line = value.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,./|()<>{} '\"");
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
-
-				word.set(word_ori);
-				context.write(word, one);
-
+				log.info("============= map() word_ori.contains(searchText ) is " + word_ori.contains(searchText ));
+				log.info("============= map() word_ori is " + word_ori);
+				
+				if ( word_ori.contains(searchText ) ) {
+					
+					word.set(word_ori);
+					context.write(word, one);	
+				}
+				
 			}
 		}
 
@@ -80,7 +88,9 @@ public class WordCount {
 		@Override
 		protected void reduce(StringWritable key, Iterable<NumberWritable> values, Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
+			// TODO Auto-generated method stub
 			long sum = 0;
+			long distinctSum = 0;
 			
 			for(NumberWritable value : values) {
 				sum += value.get();
@@ -127,7 +137,11 @@ public class WordCount {
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "WordCount" );
-
+		
+		searchText = args[2];
+		log.info("============= search text is " + searchText);
+		
+		
 		// 1. Job Instance를 가지고 초기화 작업
 		job.setJarByClass( WordCount.class );
 		
@@ -135,7 +149,7 @@ public class WordCount {
 		job.setMapperClass( MyMapper.class );
 
 		// 3. 리듀스 클래스 지정
-		job.setReducerClass( MyReducer.class);
+		job.setReducerClass( Reducer.class);
 		
 		// 리듀스 태스크 수 
 		job.setNumReduceTasks(2);
