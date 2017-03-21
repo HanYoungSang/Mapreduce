@@ -146,6 +146,7 @@ public class WordCount2 {
 		// 9. 출력 파일 위치 지정
 //		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setCompressOutput(job, true);
 		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
 		
 		

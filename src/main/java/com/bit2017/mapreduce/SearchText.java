@@ -64,6 +64,7 @@ public class SearchText {
 		Configuration conf = new Configuration();
 		conf.setStrings("search", args[2]);
 		Job job = new Job(conf);
+		job.setJobName("SearchText");
 		
 		// 1. Job Instance를 가지고 초기화 작업
 		job.setJarByClass( SearchText.class );
