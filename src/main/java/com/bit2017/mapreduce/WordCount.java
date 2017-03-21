@@ -81,20 +81,20 @@ public class WordCount {
 			long sum = 0;
 			long distinctSum = 0;
 			
-//			for(NumberWritable value : values) {
-//				sum += value.get();
-//			}
+			for(NumberWritable value : values) {
+				sum += value.get();
+			}
 			
-			for (Iterator<NumberWritable> iterator = values.iterator(); iterator.hasNext();) {
-				distinctSum+= iterator.next().get();
-	         }
+//			for (Iterator<NumberWritable> iterator = values.iterator(); iterator.hasNext();) {
+//				distinctSum+= iterator.next()..get();
+//	         }
 			
 			
 			sumWritable.set(sum);
 			
 			context.getCounter("Word Status", "Count of all Words").increment( sum );
 			
-			context.getCounter("Word Status", "Count of distinct Words").increment( distinctSum );
+			context.getCounter("Word Status", "Count of distinct Words").increment( 1L );
 			
 			context.write(key, sumWritable);
 		}
