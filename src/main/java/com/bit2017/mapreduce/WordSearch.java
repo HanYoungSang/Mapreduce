@@ -22,7 +22,7 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class WordSearch {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	private static String searchText;
+	public static String searchText;
 	
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
