@@ -22,7 +22,7 @@ import com.bit2017.mapreduce.io.NumberWritable;
 public class SearchText {
 
 	private static Log log = LogFactory.getLog(WordCount.class);
-	public static String searchText = "";
+	public static String searchText;
 	
 	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
 
@@ -66,7 +66,7 @@ public class SearchText {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "WordCount" );
 		
-		searchText = args[2];
+		searchText = new String(args[2]);
 		log.info("============= search text is " + searchText);
 		
 		
