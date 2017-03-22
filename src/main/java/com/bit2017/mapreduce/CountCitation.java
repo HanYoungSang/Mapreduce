@@ -20,13 +20,13 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class CountCitation {
 	private static Log log = LogFactory.getLog(CountCitation.class);
 
-	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
 
 		private Text word = new Text();
 		private static LongWritable one = new LongWritable(1L); //내용이 변하지 않으므로
 
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, LongWritable>.Context context)
+		protected void map(Text key, Text value, Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			
 //			log.info("--------------->>>> MyMapper map() called");
