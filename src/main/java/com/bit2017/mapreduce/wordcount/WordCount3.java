@@ -1,37 +1,35 @@
-package com.bit2017.mapreduce;
+package com.bit2017.mapreduce.wordcount;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 import com.bit2017.mapreduce.io.NumberWritable;
+import com.bit2017.mapreduce.io.StringWritable;
 
-public class WordCount {
+public class WordCount3 {
 
-	private static Log log = LogFactory.getLog(WordCount.class);
-
-	public static class MyMapper extends Mapper<LongWritable, Text, StringWritable, NumberWritable> {
+	private static Log log = LogFactory.getLog(WordCount3.class);
+	public static class MyMapper extends Mapper<Text, Text, StringWritable, NumberWritable> {
 
 		private StringWritable word = new StringWritable();
 		private static NumberWritable one = new NumberWritable(1L); //내용이 변하지 않으므로
 		
 		@Override
 		protected void setup(
-				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
+				Mapper<Text, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Mapper setup() called");
@@ -39,7 +37,7 @@ public class WordCount {
 		}
 		
 		@Override
-		protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
+		protected void map(Text key, Text value, Mapper<Text, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			
 			String line = value.toString();
@@ -47,16 +45,14 @@ public class WordCount {
 			while( tokenizer.hasMoreTokens() ) {
 				
 				String word_ori = tokenizer.nextToken();
-
 				word.set(word_ori);
 				context.write(word, one);
-
 			}
 		}
 
 		@Override
 		protected void cleanup(
-				Mapper<LongWritable, Text, StringWritable, NumberWritable>.Context context)
+				Mapper<Text, Text, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
 			log.info("--------------->>>> Mapper cleanup() called");
@@ -80,23 +76,15 @@ public class WordCount {
 		@Override
 		protected void reduce(StringWritable key, Iterable<NumberWritable> values, Reducer<StringWritable, NumberWritable, StringWritable, NumberWritable>.Context context)
 				throws IOException, InterruptedException {
+			// TODO Auto-generated method stub
 			long sum = 0;
-			
 			for(NumberWritable value : values) {
 				sum += value.get();
 			}
 			
-//			for (Iterator<NumberWritable> iterator = values.iterator(); iterator.hasNext();) {
-//				distinctSum+= iterator.next()..get();
-//	         }
-			
-			
 			sumWritable.set(sum);
-			
 			context.getCounter("Word Status", "Count of all Words").increment( sum );
-			
 			context.getCounter("Word Status", "Count of distinct Words").increment( 1L );
-			
 			context.write(key, sumWritable);
 		}
 		
@@ -126,10 +114,10 @@ public class WordCount {
 	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job( conf, "WordCount" );
-
+		Job job = new Job( conf, "WordCount2" );
+		
 		// 1. Job Instance를 가지고 초기화 작업
-		job.setJarByClass( WordCount.class );
+		job.setJarByClass( WordCount3.class );
 		
 		// 2. 맵 클래스 지정
 		job.setMapperClass( MyMapper.class );
@@ -139,7 +127,9 @@ public class WordCount {
 		
 		// 리듀스 태스크 수 
 		job.setNumReduceTasks(2);
-
+		
+		// 추가. 컴바이너 세팅
+		job.setCombinerClass(MyReducer.class);
 		
 		// 4. 출력 키 타입
 		job.setMapOutputKeyClass( StringWritable.class );
@@ -148,15 +138,20 @@ public class WordCount {
 		job.setMapOutputValueClass( NumberWritable.class );
 		
 		// 6. 입력 파일 포멧 지정 ( 생략 가능 )
-		job.setInputFormatClass( TextInputFormat.class );
+		job.setInputFormatClass( KeyValueTextInputFormat.class );
+		
 		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
-		job.setOutputFormatClass( TextOutputFormat.class );
+		job.setOutputFormatClass( SequenceFileOutputFormat.class );
 		
 		// 8. 입력 파일 위치 지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		
 		// 9. 출력 파일 위치 지정
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+//		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setCompressOutput(job, true);
+		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
+		
 		
 		// 10. 실행
 		job.waitForCompletion(true);

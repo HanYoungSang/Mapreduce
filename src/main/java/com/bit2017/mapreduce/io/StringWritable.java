@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce;
+package com.bit2017.mapreduce.io;
 
 import java.io.DataInput;
 import java.io.DataOutput;
