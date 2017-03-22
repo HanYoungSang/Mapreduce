@@ -38,7 +38,7 @@ public class TopN {
 			newItemFreq.setFreq( Long.parseLong( value.toString() ) );
 			
 			ItemFreq head = pq.peek();
-			if ( head == null || head.getFreq() < newItemFreq.getFreq() ){
+			if ( pq.size() < topN || head.getFreq() < newItemFreq.getFreq() ){
 				pq.add(newItemFreq);
 			}
 			if (pq.size() > topN){
@@ -88,7 +88,7 @@ public class TopN {
 			newItemFreq.setFreq( sum );
 			
 			ItemFreq head = pq.peek();
-			if ( head == null || head.getFreq() < newItemFreq.getFreq() ){
+			if ( pq.size() < topN || head.getFreq() < newItemFreq.getFreq() ){
 				pq.add(newItemFreq);
 			}
 			if (pq.size() > topN){
