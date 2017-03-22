@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
@@ -31,7 +31,7 @@ public class CountCitation {
 			
 //			log.info("--------------->>>> MyMapper map() called");
 //			String line = value.toString();
-//			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,./|()<>{} '\"");
+//			StringTokenizer tokenizer = new StringTokenizer(line, "\t ");
 //			while( tokenizer.hasMoreTokens() ) {
 //				
 //				String word_ori = tokenizer.nextToken();
@@ -86,7 +86,7 @@ public class CountCitation {
 		job.setMapOutputValueClass( LongWritable.class );
 		
 		// 6. 입력 파일 포멧 지정 ( 생략 가능 )
-		job.setInputFormatClass( TextInputFormat.class );
+		job.setInputFormatClass( KeyValueTextInputFormat.class );
 		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
 		job.setOutputFormatClass( TextOutputFormat.class );
 		
