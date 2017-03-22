@@ -8,16 +8,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount3 {
@@ -115,7 +112,7 @@ public class WordCount3 {
 	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job( conf, "WordCount2" );
+		Job job = new Job( conf, "WordCount3" );
 		
 		// 1. Job Instance를 가지고 초기화 작업
 		job.setJarByClass( WordCount3.class );
@@ -130,7 +127,7 @@ public class WordCount3 {
 //		job.setNumReduceTasks(2);
 		
 		// 추가. 컴바이너 세팅
-		job.setCombinerClass(MyReducer.class);
+//		job.setCombinerClass(MyReducer.class);
 		
 		// 4. 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
@@ -143,7 +140,7 @@ public class WordCount3 {
 		
 		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
 //		job.setOutputFormatClass( SequenceFileOutputFormat.class );
-		job.setOutputFormatClass( FileOutputFormat.class );
+		job.setOutputFormatClass( TextOutputFormat.class );
 		
 		// 8. 입력 파일 위치 지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
