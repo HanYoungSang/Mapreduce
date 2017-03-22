@@ -124,10 +124,10 @@ public class WordCount3 {
 		job.setReducerClass( MyReducer.class);
 		
 //		// 리듀스 태스크 수 
-//		job.setNumReduceTasks(2);
+		job.setNumReduceTasks( 2 );
 		
 		// 추가. 컴바이너 세팅
-//		job.setCombinerClass(MyReducer.class);
+		job.setCombinerClass(MyReducer.class);
 		
 		// 4. 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
