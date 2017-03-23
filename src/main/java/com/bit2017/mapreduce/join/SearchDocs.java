@@ -75,11 +75,6 @@ public class SearchDocs {
 		
 		private int topN = 10;
 		private PriorityQueue<ItemFreq> pq = null;
-		int tokenCount = 0;
-		
-		// 출력용 Text 변수
-		Text k = new Text();
-		LongWritable v = new LongWritable();
 		
 //		@Override
 //		protected void setup(
@@ -92,6 +87,14 @@ public class SearchDocs {
 		protected void reduce(Text key, Iterable<Text> values,
 				Reducer<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
+			
+			int tokenCount = 0;
+			
+			// 출력용 Text 변수
+			Text k = new Text();
+			LongWritable v = new LongWritable();
+			
+			
 			for (Text value : values) {
 				String info = value.toString();
 				String[] tokens = info.split("\t");
