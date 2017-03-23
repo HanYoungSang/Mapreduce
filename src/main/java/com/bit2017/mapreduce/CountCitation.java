@@ -1,7 +1,6 @@
 package com.bit2017.mapreduce;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
