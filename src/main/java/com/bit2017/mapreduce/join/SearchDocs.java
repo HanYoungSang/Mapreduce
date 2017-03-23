@@ -84,7 +84,8 @@ public class SearchDocs {
 			log.info("============== topN " + topN );
 			
 			log.info("============== topNString " + context.getConfiguration().get("topNString") );
-			topN = Integer.parseInt(context.getConfiguration().get("topNString"));
+			String strTopN = context.getConfiguration().get("topNString");
+			topN = Integer.parseInt(strTopN);
 			pq = new PriorityQueue<ItemFreq>(topN, new ItemFreqComparator());
 		}
 		@Override
