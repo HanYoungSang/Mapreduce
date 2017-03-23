@@ -1,6 +1,7 @@
 package com.bit2017.mapreduce.join;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import org.apache.commons.logging.Log;
@@ -19,6 +20,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.topn.ItemFreq;
 import com.bit2017.mapreduce.topn.ItemFreqComparator;
+import com.bit2017.mapreduce.topn.ItemFreqComparator2;
 
 public class SearchDocs {
 
@@ -35,10 +37,7 @@ public class SearchDocs {
 
 			String str = value.toString();
 			String findStr = context.getConfiguration().get("SearchWord");
-			
-			//TOP N 용
-			int strCount = context.getConfiguration().getInt("Count", 10);
-			
+
 			int idx = 0;
 			int count = 0;
 			while( idx != -1) {
@@ -134,16 +133,24 @@ public class SearchDocs {
 			if (pq.size() > topN){
 				pq.remove();
 			}
+		
 		}
 
 		@Override
 		protected void cleanup(
 				Reducer<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
+			
+			ArrayList<ItemFreq> list = new ArrayList<>();
+			
 			while( pq.isEmpty() == false) {
-				ItemFreq itemFreq = pq.remove();
-				context.write(new Text( itemFreq.getItem() ), new LongWritable( itemFreq.getFreq() ) );
+				list.add(pq.remove());
 			};
+			list.sort(new ItemFreqComparator2());
+			
+			for( int i =0; i < list.size(); i++){
+				context.write(new Text( list.get(i).getItem() ), new LongWritable( list.get(i).getFreq() ) );
+			}
 		}
 
 		
