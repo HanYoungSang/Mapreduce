@@ -2,7 +2,6 @@ package com.bit2017.mapreduce.join;
 
 import java.io.IOException;
 import java.util.PriorityQueue;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +18,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.topn.ItemFreq;
-import com.bit2017.mapreduce.topn.ItemFreqComparator;
 
 public class SearchDocs {
 
