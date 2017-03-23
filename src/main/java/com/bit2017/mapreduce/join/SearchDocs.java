@@ -49,8 +49,6 @@ public class SearchDocs {
 			}
 			// 검색어가 몇개 있는지를 구해서 <ID, 갯수>로 넘겨준다.
 			context.write(key, new Text( count + "\t" + 1 ));
-			
-			System.out.println("count"+count);
 
 		}
 
@@ -65,7 +63,7 @@ public class SearchDocs {
 				throws IOException, InterruptedException {
 
 			//Title ID 순서로 들어가 있는 것을 <ID, Title>로 들어가도록 바꿔 넘겨준다.
-			context.write(value, key);	
+			context.write(value, new Text( key.toString() + "\t" + 2 ));	
 
 		}
 
