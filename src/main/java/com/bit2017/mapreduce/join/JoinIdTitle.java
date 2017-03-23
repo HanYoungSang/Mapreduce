@@ -56,8 +56,8 @@ public class JoinIdTitle {
 			for (Text value : values) {
 				String info = value.toString();
 				String[] tokens = info.split("\t");
-				if(tokens.length == 2) {
-					log.info("============== tokens.length == 2 " );
+				if(tokens.length != 2) {
+					log.info("============== tokens.length != 2 " );
 //					break;
 				}
 				
