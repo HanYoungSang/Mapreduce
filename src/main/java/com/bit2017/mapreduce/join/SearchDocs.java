@@ -83,16 +83,15 @@ public class SearchDocs {
 			topN = context.getConfiguration().getInt("topN", 10);
 			log.info("============== topN " + topN );
 			
-			log.info("============== topNString " + context.getConfiguration().get("topNString") );
-			String strTopN = context.getConfiguration().get("topNString");
-			topN = Integer.parseInt(strTopN);
+			log.info("============== topNString " + context.getConfiguration().get("TopNString") );
+			topN = Integer.parseInt(context.getConfiguration().get("TopNString"));
 			pq = new PriorityQueue<ItemFreq>(topN, new ItemFreqComparator());
 		}
 		@Override
 		protected void reduce(Text key, Iterable<Text> values,
 				Reducer<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
-			
+				
 			int tokenCount = 0;
 			
 			// 출력용 Text 변수
