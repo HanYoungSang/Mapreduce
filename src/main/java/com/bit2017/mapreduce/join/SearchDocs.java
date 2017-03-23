@@ -82,6 +82,9 @@ public class SearchDocs {
 				throws IOException, InterruptedException {
 			topN = context.getConfiguration().getInt("topN", 10);
 			log.info("============== topN " + topN );
+			
+			log.info("============== topNString " + context.getConfiguration().get("topNString") );
+			topN = Integer.parseInt(context.getConfiguration().get("topNString"));
 			pq = new PriorityQueue<ItemFreq>(topN, new ItemFreqComparator());
 		}
 		@Override
@@ -171,6 +174,7 @@ public class SearchDocs {
 
 		job.getConfiguration().setStrings("SearchWord", args[0]);
 		job.getConfiguration().setInt("TopN", Integer.valueOf(args[1]) );
+		job.getConfiguration().setStrings("TopNString", args[1] );
 		
 		//////////////////////////////
 		/* 입력 */
