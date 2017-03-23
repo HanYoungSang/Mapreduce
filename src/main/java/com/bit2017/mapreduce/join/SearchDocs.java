@@ -81,10 +81,6 @@ public class SearchDocs {
 				Reducer<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			topN = context.getConfiguration().getInt("topN", 10);
-			log.info("============== topN " + topN );
-			
-			log.info("============== topNString " + context.getConfiguration().get("TopNString") );
-			topN = Integer.parseInt(context.getConfiguration().get("TopNString"));
 			pq = new PriorityQueue<ItemFreq>(topN, new ItemFreqComparator());
 		}
 		@Override
@@ -104,7 +100,6 @@ public class SearchDocs {
 				String[] tokens = info.split("\t");
 				if(tokens.length != 2) {
 					log.info("============== tokens.length != 2 " );
-//					break;
 				}
 				
 				//Doc ID와 검색어 카운트
@@ -173,8 +168,7 @@ public class SearchDocs {
 		final String OUTPUT_DIR     = "/output/searchdocs/"+args[0];
 
 		job.getConfiguration().setStrings("SearchWord", args[0]);
-		job.getConfiguration().setInt("TopN", Integer.valueOf(args[1]) );
-		job.getConfiguration().setStrings("TopNString", args[1] );
+		job.getConfiguration().setInt("TopN", Integer.parseInt(args[1]) );
 		
 		//////////////////////////////
 		/* 입력 */
