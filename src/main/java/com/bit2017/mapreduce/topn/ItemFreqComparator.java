@@ -12,10 +12,10 @@ public class ItemFreqComparator implements Comparator<ItemFreq> {
 		}
 		
 		if ( o1.getFreq() > o2.getFreq() ){
-			return 1;
+			return -1;
 		}
 		
-		return -1;
+		return 1;
 	}
 
 }
