@@ -18,6 +18,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.bit2017.mapreduce.topn.ItemFreq;
+import com.bit2017.mapreduce.topn.ItemFreqComparator;
 
 public class SearchDocs {
 
@@ -76,13 +77,13 @@ public class SearchDocs {
 		private int topN = 10;
 		private PriorityQueue<ItemFreq> pq = null;
 		
-//		@Override
-//		protected void setup(
-//				Reducer<Text, Text, Text, LongWritable>.Context context)
-//				throws IOException, InterruptedException {
-//			topN = context.getConfiguration().getInt("topN", 10);
-//			pq = new PriorityQueue<ItemFreq>(10, new ItemFreqComparator());
-//		}
+		@Override
+		protected void setup(
+				Reducer<Text, Text, Text, LongWritable>.Context context)
+				throws IOException, InterruptedException {
+			topN = context.getConfiguration().getInt("topN", 10);
+			pq = new PriorityQueue<ItemFreq>(10, new ItemFreqComparator());
+		}
 		@Override
 		protected void reduce(Text key, Iterable<Text> values,
 				Reducer<Text, Text, Text, LongWritable>.Context context)
@@ -122,15 +123,27 @@ public class SearchDocs {
 			if( tokenCount != 2 ) {
 				return;
 			}
-			context.write(k, v);
+			ItemFreq newItemFreq = new ItemFreq();
+			newItemFreq.setItem( k.toString() );
+			newItemFreq.setFreq( v.get() );
+			
+			ItemFreq head = pq.peek();
+			if ( pq.size() < topN || head.getFreq() < newItemFreq.getFreq() ){
+				pq.add(newItemFreq);
+			}
+			if (pq.size() > topN){
+				pq.remove();
+			}
 		}
 
 		@Override
 		protected void cleanup(
 				Reducer<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
-			// TODO Auto-generated method stub
-			super.cleanup(context);
+			while( pq.isEmpty() == false) {
+				ItemFreq itemFreq = pq.remove();
+				context.write(new Text( itemFreq.getItem() ), new LongWritable( itemFreq.getFreq() ) );
+			};
 		}
 
 		
