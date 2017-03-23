@@ -111,7 +111,7 @@ public class JoinIdTitle {
 		// 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
 		// 출력 밸류 타입
-		job.setMapOutputValueClass( LongWritable.class );
+		job.setMapOutputValueClass( Text.class );
 		// 출력 파일 포멧 지정 ( 생략 가능 )
 		job.setOutputFormatClass( TextOutputFormat.class );
 		// 출력 파일 위치 지정
