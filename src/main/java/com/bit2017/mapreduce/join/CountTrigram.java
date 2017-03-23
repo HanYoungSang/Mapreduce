@@ -3,6 +3,8 @@ package com.bit2017.mapreduce.join;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -19,6 +21,7 @@ import com.bit2017.mapreduce.topn.TopN;
 
 public class CountTrigram {
 
+	private static Log log = LogFactory.getLog(CountTrigram.class);
 
 	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable>{
 
@@ -26,7 +29,8 @@ public class CountTrigram {
 		protected void map(Text key, Text value,
 				Mapper<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
-
+			
+			Text result = new Text();
 			String str = value.toString();
 			String[] word = new String[3];
 			int count = 0;
@@ -37,8 +41,8 @@ public class CountTrigram {
 				if( count < 2 ) {
 					count++;
 				} else if( count == 2 ) {
-			
-					context.write(key, new LongWritable(1L));
+					result.set(word[0] + " " + word[1] + " " + word[2]);
+					context.write(result, new LongWritable(1L));
 					word[0] = word[1];
 					word[1] = word[2];
 				}
