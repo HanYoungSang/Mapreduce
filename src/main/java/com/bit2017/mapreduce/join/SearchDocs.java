@@ -81,7 +81,8 @@ public class SearchDocs {
 				Reducer<Text, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			topN = context.getConfiguration().getInt("topN", 10);
-			pq = new PriorityQueue<ItemFreq>(10, new ItemFreqComparator());
+			log.info("============== topN " + topN );
+			pq = new PriorityQueue<ItemFreq>(topN, new ItemFreqComparator());
 		}
 		@Override
 		protected void reduce(Text key, Iterable<Text> values,
