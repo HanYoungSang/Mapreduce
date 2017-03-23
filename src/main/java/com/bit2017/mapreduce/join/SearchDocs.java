@@ -2,6 +2,7 @@ package com.bit2017.mapreduce.join;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.PriorityQueue;
 
 import org.apache.commons.logging.Log;
@@ -162,10 +163,11 @@ public class SearchDocs {
 
 		job.setJarByClass(SearchDocs.class);
 
+		
 		// 파라미터 저장
 		final String TITLE_DOCID    = "/input/2M.TITLE.ID";
 		final String DOCID_CONTENTS = "/input/10K.ID.CONTENTS";
-		final String OUTPUT_DIR     = "/output/searchdocs/"+args[0];
+		final String OUTPUT_DIR     = "/output/searchdocs/"+args[0]+"_"+args[1];
 
 		job.getConfiguration().setStrings("SearchWord", args[0]);
 		job.getConfiguration().setInt("TopN", Integer.parseInt(args[1]) );
