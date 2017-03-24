@@ -55,7 +55,6 @@ public class StringSort {
 		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
 		SequenceFileOutputFormat.setOutputCompressionType(job, SequenceFile.CompressionType.BLOCK);
 		
-		
 		// 실행
 		job.waitForCompletion(true);
 
