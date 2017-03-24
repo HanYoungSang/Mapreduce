@@ -3,8 +3,8 @@ package com.bit2017.mapreduce.wordcount;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -19,7 +19,7 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 public class WordCount3 {
 
-	private static Log log = LogFactory.getLog(WordCount3.class);
+//	private static Log log = LogFactory.getLog(WordCount3.class);
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
 		private Text word = new Text();
@@ -30,7 +30,7 @@ public class WordCount3 {
 				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
-			log.info("--------------->>>> Mapper setup() called");
+//			log.info("--------------->>>> Mapper setup() called");
 			super.setup(context);
 		}
 		
@@ -53,7 +53,7 @@ public class WordCount3 {
 				Mapper<LongWritable, Text, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
-			log.info("--------------->>>> Mapper cleanup() called");
+//			log.info("--------------->>>> Mapper cleanup() called");
 			super.cleanup(context);
 		}
 	}
@@ -67,7 +67,7 @@ public class WordCount3 {
 				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
-			log.info("--------------->>>> Reducer setup() called");
+//			log.info("--------------->>>> Reducer setup() called");
 			super.setup(context);
 		}
 		
@@ -102,7 +102,7 @@ public class WordCount3 {
 				Reducer<Text, LongWritable, Text, LongWritable>.Context context)
 				throws IOException, InterruptedException {
 			// TODO Auto-generated method stub
-			log.info("--------------->>>> Reducer cleanup() called");
+//			log.info("--------------->>>> Reducer cleanup() called");
 			super.cleanup(context);
 		}
 
