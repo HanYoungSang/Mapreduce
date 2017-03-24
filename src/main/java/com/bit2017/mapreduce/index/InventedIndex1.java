@@ -70,6 +70,9 @@ public class InventedIndex1 {
 		//  리듀스 클래스 지정
 		job.setReducerClass( MyReducer.class);
 
+		// 리듀스 개수 지정
+		job.setNumReduceTasks( 10 );
+		
 		//  맵 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
 
