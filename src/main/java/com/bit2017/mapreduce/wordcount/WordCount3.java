@@ -135,6 +135,13 @@ public class WordCount3 {
 		// 5. 출력 밸류 타입
 		job.setMapOutputValueClass( LongWritable.class );
 		
+		// 4. 출력 키 타입
+		job.setOutputKeyClass( Text.class );
+		
+		// 5. 출력 밸류 타입
+		job.setOutputValueClass( LongWritable.class );
+		
+		
 		// 6. 입력 파일 포멧 지정 ( 생략 가능 )
 		job.setInputFormatClass( TextInputFormat.class );
 		
