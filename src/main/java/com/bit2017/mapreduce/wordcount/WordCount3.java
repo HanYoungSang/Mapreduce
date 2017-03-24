@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -15,6 +16,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount3 {
@@ -139,17 +141,17 @@ public class WordCount3 {
 		job.setInputFormatClass( TextInputFormat.class );
 		
 		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
-//		job.setOutputFormatClass( SequenceFileOutputFormat.class );
-		job.setOutputFormatClass( TextOutputFormat.class );
+		job.setOutputFormatClass( SequenceFileOutputFormat.class );
+//		job.setOutputFormatClass( TextOutputFormat.class );
 		
 		// 8. 입력 파일 위치 지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		
 		// 9. 출력 파일 위치 지정
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-//		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+//		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
 //		SequenceFileOutputFormat.setCompressOutput(job, true);
-//		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
+		SequenceFileOutputFormat.setOutputCompressionType(job, CompressionType.BLOCK);
 		
 		
 		// 10. 실행
