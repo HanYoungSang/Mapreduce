@@ -21,52 +21,6 @@ public class StringSort {
 
 	private static Log log = LogFactory.getLog(StringSort.class);
 
-	public static class MyMapper extends Mapper<Text, Text, Text, LongWritable> {
-
-		private Text word = new Text();
-		private static LongWritable one = new LongWritable(1L); //내용이 변하지 않으므로
-
-		@Override
-		protected void map(Text key, Text value, Mapper<Text, Text, Text, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			
-			log.info("--------------->>>> MyMapper map() called");
-			String line = value.toString();
-			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,./|()<>{} '\"");
-			while( tokenizer.hasMoreTokens() ) {
-				
-				String word_ori = tokenizer.nextToken();
-
-				word.set(word_ori);
-				context.write(word, one);
-
-			}
-		}
-	}
-
-	public static class MyReducer extends Reducer<Text, LongWritable, Text, LongWritable> {
-
-		private LongWritable sumWritable = new LongWritable(); 
-	
-		@Override
-		protected void reduce(Text key, Iterable<LongWritable> values, Reducer<Text, LongWritable, Text, LongWritable>.Context context)
-				throws IOException, InterruptedException {
-			long sum = 0;
-			
-			for(LongWritable value : values) {
-				sum += value.get();
-			}
-			
-//			for (Iterator<LongWritable> iterator = values.iterator(); iterator.hasNext();) {
-//				distinctSum+= iterator.next().get();
-//	         }
-			
-			sumWritable.set(sum);
-			context.write(key, sumWritable);
-		}
-
-	}
-	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		Job job = new Job( conf, "String Sort" );
@@ -75,10 +29,10 @@ public class StringSort {
 		job.setJarByClass( StringSort.class );
 		
 		// 맵 클래스 지정
-		job.setMapperClass( MyMapper.class );
+		job.setMapperClass( Mapper.class );
 
 		// 리듀스 클래스 지정
-		job.setReducerClass( MyReducer.class);
+		job.setReducerClass( Reducer.class);
 		
 		// 맵퍼 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
