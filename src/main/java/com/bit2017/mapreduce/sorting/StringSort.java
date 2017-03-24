@@ -1,4 +1,4 @@
-package com.bit2017.mapreduce.wordcount;
+package com.bit2017.mapreduce.sorting;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -8,18 +8,18 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
-public class WordCount {
+public class StringSort {
 
-	private static Log log = LogFactory.getLog(WordCount.class);
+	private static Log log = LogFactory.getLog(StringSort.class);
 
 	public static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
 
@@ -69,35 +69,44 @@ public class WordCount {
 	
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		Job job = new Job( conf, "WordCount" );
+		Job job = new Job( conf, "String Sort" );
 
-		// 1. Job Instance를 가지고 초기화 작업
-		job.setJarByClass( WordCount.class );
+		// Job Instance를 가지고 초기화 작업
+		job.setJarByClass( StringSort.class );
 		
-		// 2. 맵 클래스 지정
+		// 맵 클래스 지정
 		job.setMapperClass( MyMapper.class );
 
-		// 3. 리듀스 클래스 지정
+		// 리듀스 클래스 지정
 		job.setReducerClass( MyReducer.class);
 		
-		// 4. 맵 출력 키 타입
+		// 맵퍼 출력 키 타입
 		job.setMapOutputKeyClass( Text.class );
 		
-		// 5. 맵 출력 밸류 타입
-		job.setMapOutputValueClass( LongWritable.class );
+		// 맵퍼 출력 밸류 타입
+		job.setMapOutputValueClass( Text.class );
 		
-		// 6. 입력 파일 포멧 지정 ( 생략 가능 )
-		job.setInputFormatClass( TextInputFormat.class );
-		// 7. 출력 파일 포멧 지정 ( 생략 가능 )
-		job.setOutputFormatClass( TextOutputFormat.class );
+		// 처리 결과 출력 키 타입(리듀스)
+		job.setOutputKeyClass( Text.class );
 		
-		// 8. 입력 파일 위치 지정
+		//처리 결과 출력 밸류 타입(리듀스)
+		job.setOutputValueClass( Text.class );
+				
+		
+		// 입력 파일 포멧 지정 ( 생략 가능 )
+		job.setInputFormatClass( KeyValueTextInputFormat.class );
+		// 출력 파일 포멧 지정 ( 생략 가능 )
+		job.setOutputFormatClass( SequenceFileOutputFormat.class );
+		
+		// 입력 파일 위치 지정
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		
-		// 9. 출력 파일 위치 지정
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		// 출력 파일 위치 지정
+		SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+		SequenceFileOutputFormat.setOutputCompressionType(job, SequenceFile.CompressionType.BLOCK);
 		
-		// 10. 실행
+		
+		// 실행
 		job.waitForCompletion(true);
 
 		
