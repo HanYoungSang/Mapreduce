@@ -1,6 +1,8 @@
 package com.bit2017.mapreduce.index;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -20,6 +22,7 @@ public class InventedIndex1 {
 
 	public static class MyMapper extends Mapper<Text, Text, Text, Text> {
 
+		private Set<String> words = new HashSet<String>();
 		private Text word = new Text();
 		
 		@Override
@@ -28,11 +31,18 @@ public class InventedIndex1 {
 
 			String line = contents.toString();
 			StringTokenizer tokenizer = new StringTokenizer(line, "\r\n\t,/|()<>{} '\"");
+			//Set 초기화 없애고 시작해야 하므로
+			words.clear();
 			while( tokenizer.hasMoreTokens() ) {
-				word.set(tokenizer.nextToken().toLowerCase());
-				context.write(word, docId);
-
+				words.add( tokenizer.nextToken().toLowerCase() );
 			}
+			
+			for ( String w : words){
+				word.set(w);
+				context.write(word, docId);	
+			}
+			
+
 		}
 	}
 
