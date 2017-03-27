@@ -51,23 +51,23 @@ public class CreateESIndex {
 			
 			
 			// 응답 받기
-			String lines = "";
-			BufferedReader br = new BufferedReader( new InputStreamReader( urlCon.getInputStream() ) );
-			while ( ( lines = br.readLine() ) != null){
-				lines += lines;
-			}
-			
+		    String lines = "";
+		    BufferedReader br = new BufferedReader( new InputStreamReader( urlCon.getInputStream() ) );
+		    while( (line = br.readLine() ) != null ) {
+		        lines += line;
+		    }    
+
 			// 결과 처리
 			if( lines.indexOf( "\"successful\":1,\"failed\":0" ) < 0 ) {
-					//실패
-				   context.getCounter( "index stats", "fail").increment( 1 );
-				} else {
-					//성공
-				   context.getCounter( "index stats", "success" ).increment( 1 );
-				}
-							
-				br.close();
-				urlCon.disconnect();
+				//실패
+			   context.getCounter( "index stats", "fail").increment( 1 );
+			} else {
+				//성공
+			   context.getCounter( "index stats", "success" ).increment( 1 );
+			}
+						
+			br.close();
+			urlCon.disconnect();
 			
 		}
 
