@@ -27,7 +27,7 @@ public class CreateESIndex {
 		protected void setup(Mapper<Text, Text, Text, Text>.Context context)
 				throws IOException, InterruptedException {
 			String[] hosts = context.getConfiguration().getStrings("ESServer");
-			baseURL = "http://" + hosts[0] + ":9200/wikipedia/doc";
+			baseURL = "http://" + hosts[0] + ":9200/wikipedia/doc/";
 		}
 		
 		@Override
